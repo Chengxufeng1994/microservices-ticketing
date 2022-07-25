@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: microservices-ticketing
+build:
+  local:
+    push: false
+  artifacts:
+  - image: benny0329/auth
+    context: auth
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+        - dest: . 
+          src: 'src/**/*.tx'
+deploy:
+  kubectl:
+    manifests:
+    - ./infra/k8s/*
