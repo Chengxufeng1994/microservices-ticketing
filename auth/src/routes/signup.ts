@@ -1,8 +1,10 @@
 import express, { Request, Response } from 'express';
 import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
+import { BadRequestError } from '../errors/bad-request-error';
 import { DatabaseConnectionError } from '../errors/database-connection-error';
 import { RequestValidationError } from '../errors/request-validation-error';
+import { User } from '../models/user';
 
 const router = express.Router();
 
@@ -21,17 +23,19 @@ router.post(
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      // This is javascript land
-      // const error = new Error('Invalid email or password');
-      // error.reasons = errors.array()ail or password');
-
       throw new RequestValidationError(errors.array());
     }
 
-    console.log('Create user...');
-    throw new DatabaseConnectionError();
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      throw new BadRequestError('Email in use');
+    }
 
-    res.send({});
+    const user = User.build({ email, password });
+    await user.save();
+
+    res.status(201).send(user);
   }
 );
 

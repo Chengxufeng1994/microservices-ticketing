@@ -1,6 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
+import mongoose from 'mongoose';
 
 // Routes
 import { currentUserRouter } from './routes/current-user';
@@ -13,6 +14,8 @@ import { errorHandler } from './middlewares/error-handler';
 import { NotFoundError } from './errors/not-found-error';
 
 const PORT = 3000;
+const AUTH_MONGO_SERVICE_HOST = process.env.AUTH_MONGO_SERVICE_HOST;
+const AUTH_MONGO_SERVICE_PORT = process.env.AUTH_MONGO_SERVICE_PORT;
 
 const app = express();
 app.use(json());
@@ -28,6 +31,18 @@ app.get('*', async (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
+const start = async () => {
+  try {
+    await mongoose.connect(
+      `mongodb://${AUTH_MONGO_SERVICE_HOST}:${AUTH_MONGO_SERVICE_PORT}/auth`
+    );
+  } catch (err) {
+    console.error(err);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
+};
+
+start();
