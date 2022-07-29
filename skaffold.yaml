@@ -13,7 +13,7 @@ build:
     sync:
       manual:
         - dest: . 
-          src: 'src/**/*.tx'
+          src: 'src/**/*.ts'
 deploy:
   kubectl:
     manifests:
