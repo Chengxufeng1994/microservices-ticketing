@@ -22,6 +22,14 @@ build:
       manual:
         - dest: . 
           src: '**/*.js'
+  - image: benny0329/tickets
+    context: tickets
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+        - dest: . 
+          src: '**/*.ts'
 deploy:
   kubectl:
     manifests:

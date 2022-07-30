@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-deployment
+  name: tickets-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: tickets
   template:
     metadata:
       labels:
-        app: auth
+        app: tickets
     spec:
       containers:
-      - name: auth
-        image: benny0329/auth
+      - name: tickets
+        image: benny0329/tickets
         ports:
         - containerPort: 3000
         env:
           - name: MONGO_URI
-            value: 'mongodb://auth-mongo:27017/auth'
+            value: 'mongodb://tickets-mongo:27017/tickets'
           - name: JWT_KEY
             valueFrom:
               secretKeyRef:

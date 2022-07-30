@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 import { app } from './app';
 
 const PORT = 3000;
-const AUTH_MONGO_SERVICE_HOST = process.env.AUTH_MONGO_SERVICE_HOST;
-const AUTH_MONGO_SERVICE_PORT = process.env.AUTH_MONGO_SERVICE_PORT;
+const TICKETS_MONGO_SERVICE_HOST = process.env.TICKETS_MONGO_SERVICE_HOST;
+const TICKETS_MONGO_SERVICE_PORT = process.env.TICKETS_MONGO_SERVICE_PORT;
 const MONGO_URI = process.env.MONGO_URI;
 
 const start = async () => {
