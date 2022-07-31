@@ -18,6 +18,14 @@ spec:
         ports:
         - containerPort: 3000
         env:
+          - name: NATS_CLIENT_ID
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: NATS_URL
+            value: 'http://nats:4222'
+          - name: NATS_CLUSTER_ID
+            value: 'ticketing'
           - name: MONGO_URI
             value: 'mongodb://tickets-mongo:27017/tickets'
           - name: JWT_KEY

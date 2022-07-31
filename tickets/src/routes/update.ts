@@ -6,8 +6,9 @@ import {
   requireAuth,
   NotAuthorizedError,
 } from '@msa-tickets/common';
-
 import { Ticket } from '../models/ticket';
+import { TicketUpdatedEventPublisher } from '../events/publishers/ticket-updated-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -41,6 +42,13 @@ router.put(
     });
 
     await ticket.save();
+
+    new TicketUpdatedEventPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId,
+    });
 
     res.send(ticket);
   }

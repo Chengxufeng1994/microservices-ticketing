@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
+import { natsWrapper } from '../../nats-wrapper';
 
 describe('PUT /api/tickets/:id', () => {
   it('returns a 404 if the provided id does not exits', async () => {
@@ -100,5 +101,27 @@ describe('PUT /api/tickets/:id', () => {
 
     expect(ticketResponse.body.title).toEqual('new_ticket');
     expect(ticketResponse.body.price).toEqual(100);
+  });
+
+  it('publishes an event', async () => {
+    const cookie = global.signin();
+    const response = await request(app)
+      .post(`/api/tickets`)
+      .set('Cookie', cookie)
+      .send({
+        title: 'ticket',
+        price: 20,
+      });
+
+    await request(app)
+      .put(`/api/tickets/${response.body.id}`)
+      .set('Cookie', cookie)
+      .send({
+        title: 'new_ticket',
+        price: 100,
+      })
+      .expect(200);
+
+      expect(natsWrapper.client.publish).toHaveBeenCalled();
   });
 });
