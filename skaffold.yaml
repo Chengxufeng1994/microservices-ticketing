@@ -30,6 +30,14 @@ build:
       manual:
         - dest: . 
           src: '**/*.ts'
+  - image: benny0329/orders
+    context: orders 
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+        - dest: . 
+          src: '**/*.ts'
 deploy:
   kubectl:
     manifests:

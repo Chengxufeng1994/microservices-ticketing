@@ -18,6 +18,7 @@ const start = async () => {
 
   try {
     await mongoose.connect(`${MONGO_URI}`);
+    console.log('Connected to MongoDb')
   } catch (err) {
     console.error(err);
   }

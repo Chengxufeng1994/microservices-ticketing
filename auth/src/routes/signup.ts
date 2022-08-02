@@ -35,7 +35,7 @@ router.post(
       {
         id: user.id,
         email: user.email,
-        exp: Math.floor(Date.now() / 1000) + 15 * 60,
+        // exp: Math.floor(Date.now() / 1000) + 15 * 60,
       },
       process.env.JWT_KEY!
     );
