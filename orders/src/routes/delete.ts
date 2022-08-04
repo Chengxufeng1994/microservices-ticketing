@@ -5,6 +5,8 @@ import {
   requireAuth,
 } from '@msa-tickets/common';
 import { Order, OrderStatus } from '../models/order';
+import { OrderCancelledPublisher } from '../events/publisher/order-cancelled-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -17,7 +19,7 @@ router.delete(
       params: { orderId },
     } = req;
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate('ticket');
 
     if (!order) {
       throw new NotFoundError();
@@ -31,6 +33,12 @@ router.delete(
     await order.save();
 
     // publishing an event saying this was cancelled!
+    new OrderCancelledPublisher(natsWrapper.client).publish({
+      id: order.id,
+      ticket: {
+        id: order.ticket.id,
+      },
+    });
 
     res.status(204).send({});
   }
