@@ -38,6 +38,14 @@ build:
       manual:
         - dest: . 
           src: '**/*.ts'
+  - image: benny0329/expiration
+    context: expiration
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+        - dest: . 
+          src: '**/*.ts'
 deploy:
   kubectl:
     manifests:
