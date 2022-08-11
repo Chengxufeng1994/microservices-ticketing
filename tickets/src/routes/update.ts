@@ -5,6 +5,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from '@msa-tickets/common';
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedEventPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -32,6 +33,10 @@ router.put(
       throw new NotFoundError();
     }
 
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
+    }
+
     if (ticket.userId !== userId) {
       throw new NotAuthorizedError();
     }
@@ -48,6 +53,7 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId,
+      version: ticket.version,
     });
 
     res.send(ticket);
