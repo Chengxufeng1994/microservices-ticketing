@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 
 const PORT = 3000;
-// const TICKETS_MONGO_SERVICE_HOST = process.env.TICKETS_MONGO_SERVICE_HOST;
-// const TICKETS_MONGO_SERVICE_PORT = process.env.TICKETS_MONGO_SERVICE_PORT;
-// const NATS_SERVICE_HOST = process.env.NATS_SERVICE_HOST;
-// const NATS_SERVICE_PORT = process.env.NATS_SERVICE_PORT;
 const JWT_KEY = process.env.JWT_KEY;
 const NATS_CLIENT_ID = process.env.NATS_CLIENT_ID;
 const NATS_URL = process.env.NATS_URL;
@@ -49,6 +47,9 @@ const start = async () => {
 
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
+
+    new OrderCreatedListener(natsWrapper.client).listen();
+    new OrderCancelledListener(natsWrapper.client).listen();
 
     await mongoose.connect(`${MONGO_URI}`);
     console.log('Connected to MongoDb');
