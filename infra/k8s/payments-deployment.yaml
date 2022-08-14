@@ -37,4 +37,4 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: stripe-secret
-                key:  stripe_KEY
+                key:  STRIPE_KEY
