@@ -1,10 +1,11 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import request from 'supertest';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import { app } from '../app';
 
 jest.mock('../nats-wrapper.ts');
+
+process.env.STRIPE_KEY =
+  'sk_test_51LWYCQLmv84vKW0iNcN8hjNXE2vnOuu83XxmaDq1DE3gPB8DOwFD1k24DHmOspNgbbQHfmLjcckKrpyDcqq9QXPn00Mlme3kk0';
 
 let mongo: any;
 
